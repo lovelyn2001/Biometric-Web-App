@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const signInBtn = document.getElementById('signInBtn');
     const loginBtn = document.getElementById('loginBtn');
     const createPasskeyBtn = document.getElementById('createPasskeyBtn');
-    const loginWithPasskeyBtn = document.getElementById('loginWithPasskeyBtn');
     const statusDiv = document.getElementById('status');
     const instruction = document.getElementById('instruction');
 
@@ -11,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
     signInBtn.addEventListener('click', function() {
         instruction.innerText = 'Create a passkey to sign in.';
         createPasskeyBtn.style.display = 'block';
-        loginBtn.style.display = 'none';
+        signInBtn.style.display = 'none';
     });
 
     // Event listener for creating a passkey
@@ -46,38 +45,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Event listener for "Login"
-    loginBtn.addEventListener('click', function() {
-        fetch('/check-passkey')
-            .then(response => response.json())
-            .then(data => {
-                if (data.hasPasskey) {
-                    instruction.innerText = 'Please login with your passkey.';
-                    loginWithPasskeyBtn.style.display = 'block';
-                } else {
-                    statusDiv.innerText = 'No passkey found. Please create a passkey first.';
-                }
-            });
-    });
-
     // Event listener for logging in with passkey
-    loginWithPasskeyBtn.addEventListener('click', function() {
-        if (window.PublicKeyCredential) {
-            navigator.credentials.get({
-                publicKey: {
-                    challenge: new Uint8Array([/* Random bytes sent by server */]),
-                    rpId: window.location.hostname,
-                    userVerification: "required"
-                }
-            }).then(function (assertion) {
-                verifyAssertion(assertion);
-            }).catch(function (err) {
-                console.error(err);
-                statusDiv.innerText = 'Login failed!';
-            });
-        } else {
-            statusDiv.innerText = 'Passkey API not supported!';
-        }
+    loginBtn.addEventListener('click', function() {
+        window.location.href = '/welcome';
     });
 
     function registerPasskey(attestation) {
@@ -99,36 +69,10 @@ document.addEventListener('DOMContentLoaded', function() {
           .then(data => {
               if (data.success) {
                   statusDiv.innerText = 'Passkey created successfully!';
-                  loginWithPasskeyBtn.style.display = 'block';
+                  createPasskeyBtn.style.display = 'none';
+                  loginBtn.style.display = 'block';
               } else {
                   statusDiv.innerText = 'Passkey creation failed!';
-              }
-          });
-    }
-
-    function verifyAssertion(assertion) {
-        fetch('/verify', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                id: assertion.id,
-                rawId: arrayBufferToBase64(assertion.rawId),
-                type: assertion.type,
-                response: {
-                    clientDataJSON: arrayBufferToBase64(assertion.response.clientDataJSON),
-                    authenticatorData: arrayBufferToBase64(assertion.response.authenticatorData),
-                    signature: arrayBufferToBase64(assertion.response.signature),
-                    userHandle: arrayBufferToBase64(assertion.response.userHandle)
-                }
-            })
-        }).then(response => response.json())
-          .then(data => {
-              if (data.success) {
-                  window.location.href = '/welcome';
-              } else {
-                  statusDiv.innerText = 'Access Denied!';
               }
           });
     }

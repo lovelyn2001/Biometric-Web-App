@@ -1,3 +1,4 @@
+
 // server.js
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -10,7 +11,6 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "static")));
 
 const passkeyFilePath = path.join(__dirname, 'passkeys.json');
-
 
 // Utility function to load stored passkeys
 function loadPasskeys() {
@@ -30,12 +30,6 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 })
 
-
-app.get('/check-passkey', (req, res) => {
-    const passkeys = loadPasskeys();
-    res.json({ hasPasskey: !!passkeys["user@example.com"] }); // Replace with actual user ID/email
-});
-
 app.post('/register', (req, res) => {
     const { id, rawId, type, response } = req.body;
 
@@ -46,20 +40,6 @@ app.post('/register', (req, res) => {
     res.json({ success: true });
 });
 
-app.post('/verify', (req, res) => {
-    const { id, rawId, type, response } = req.body;
-
-    const passkeys = loadPasskeys();
-    const storedPasskey = passkeys["user@example.com"];
-
-    if (storedPasskey && storedPasskey.id === id) {
-        // Additional verification logic goes here
-        res.json({ success: true });
-    } else {
-        res.json({ success: false });
-    }
-});
-
 app.get('/welcome', (req, res) => {
     res.send('<h1>Welcome to the Civil Intelligence Center</h1>');
 });
@@ -67,4 +47,3 @@ app.get('/welcome', (req, res) => {
 app.listen(PORT, () => {
     console.log(`server started on port ${PORT}`);
   });
-
