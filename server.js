@@ -11,6 +11,7 @@ app.use(express.static(path.join(__dirname, "static")));
 
 const passkeyFilePath = path.join(__dirname, 'passkeys.json');
 
+
 // Utility function to load stored passkeys
 function loadPasskeys() {
     if (fs.existsSync(passkeyFilePath)) {
@@ -28,6 +29,7 @@ function savePasskeys(passkeys) {
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 })
+
 
 app.get('/check-passkey', (req, res) => {
     const passkeys = loadPasskeys();
@@ -58,8 +60,11 @@ app.post('/verify', (req, res) => {
     }
 });
 
+app.get('/welcome', (req, res) => {
+    res.send('<h1>Welcome to the Civil Intelligence Center</h1>');
+});
+
 app.listen(PORT, () => {
     console.log(`server started on port ${PORT}`);
   });
-
 

@@ -1,20 +1,18 @@
 // main.js
 document.addEventListener('DOMContentLoaded', function() {
-    const createPasskeyBtn = document.getElementById('createPasskeyBtn');
     const signInBtn = document.getElementById('signInBtn');
+    const loginBtn = document.getElementById('loginBtn');
+    const createPasskeyBtn = document.getElementById('createPasskeyBtn');
+    const loginWithPasskeyBtn = document.getElementById('loginWithPasskeyBtn');
     const statusDiv = document.getElementById('status');
     const instruction = document.getElementById('instruction');
 
-    // Check if the user has already created a passkey
-    fetch('/check-passkey')
-        .then(response => response.json())
-        .then(data => {
-            if (data.hasPasskey) {
-                instruction.innerText = 'Please sign in with your passkey to continue.';
-                createPasskeyBtn.style.display = 'none';
-                signInBtn.style.display = 'block';
-            }
-        });
+    // Event listener for "Sign In"
+    signInBtn.addEventListener('click', function() {
+        instruction.innerText = 'Create a passkey to sign in.';
+        createPasskeyBtn.style.display = 'block';
+        loginBtn.style.display = 'none';
+    });
 
     // Event listener for creating a passkey
     createPasskeyBtn.addEventListener('click', function() {
@@ -48,8 +46,22 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Event listener for signing in with passkey
-    signInBtn.addEventListener('click', function() {
+    // Event listener for "Login"
+    loginBtn.addEventListener('click', function() {
+        fetch('/check-passkey')
+            .then(response => response.json())
+            .then(data => {
+                if (data.hasPasskey) {
+                    instruction.innerText = 'Please login with your passkey.';
+                    loginWithPasskeyBtn.style.display = 'block';
+                } else {
+                    statusDiv.innerText = 'No passkey found. Please create a passkey first.';
+                }
+            });
+    });
+
+    // Event listener for logging in with passkey
+    loginWithPasskeyBtn.addEventListener('click', function() {
         if (window.PublicKeyCredential) {
             navigator.credentials.get({
                 publicKey: {
@@ -61,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 verifyAssertion(assertion);
             }).catch(function (err) {
                 console.error(err);
-                statusDiv.innerText = 'Sign in failed!';
+                statusDiv.innerText = 'Login failed!';
             });
         } else {
             statusDiv.innerText = 'Passkey API not supported!';
@@ -87,6 +99,7 @@ document.addEventListener('DOMContentLoaded', function() {
           .then(data => {
               if (data.success) {
                   statusDiv.innerText = 'Passkey created successfully!';
+                  loginWithPasskeyBtn.style.display = 'block';
               } else {
                   statusDiv.innerText = 'Passkey creation failed!';
               }
@@ -113,8 +126,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }).then(response => response.json())
           .then(data => {
               if (data.success) {
-                  statusDiv.innerText = 'Access Granted!';
-                  // Redirect or load the protected content
+                  window.location.href = '/welcome';
               } else {
                   statusDiv.innerText = 'Access Denied!';
               }
