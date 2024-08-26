@@ -9,11 +9,13 @@
 </head>
 <body>
     <div class="container">
-        <h1>Welcome to the Civil Intelligence System</h1>
-        <p id="instruction">Please scan your fingerprint or create a passkey to access the system.</p>
-        <button id="scanBtn">Scan Fingerprint</button>
-        <button id="createPasskeyBtn">Create Passkey</button>
-        <div id="status"></div>
+        <h1 id="welcomeMessage">Welcome to the Civil Intelligence Center</h1>
+        <div id="formContainer">
+            <p id="instruction">Please create a passkey to get started.</p>
+            <button id="createPasskeyBtn">Create Passkey</button>
+            <button id="signInBtn" style="display: none;">Sign In</button>
+            <div id="status"></div>
+        </div>
     </div>
 
     <script src="javascript/main.js"></script>
