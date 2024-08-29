@@ -1,13 +1,14 @@
 /* styles.css */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    background-color: #f0f0f0; /* Light background for contrast */
     text-align: center;
     margin-top: 100px;
+    color: #fff;
 }
 
 .container {
-    background-color: #fff;
+    background-color: #3e1a5e; /* Darker purple for the container */
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
@@ -15,10 +16,14 @@ body {
     margin: auto;
 }
 
+h1 {
+    color: #ffeb3b; /* Yellow color for the header */
+}
+
 button {
     padding: 10px 20px;
     font-size: 16px;
-    background-color: #007bff;
+    background-color: #ff9800; /* Orange color for buttons */
     color: #fff;
     border: none;
     border-radius: 5px;
@@ -27,11 +32,11 @@ button {
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: #e68900; /* Darker orange for hover effect */
 }
 
 #status {
     margin-top: 20px;
     font-weight: bold;
-    color: red;
+    color: #ffeb3b; /* Yellow color for status messages */
 }
